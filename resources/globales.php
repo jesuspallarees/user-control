@@ -1,2 +1,2 @@
 <?php
-$preparado_cabecera = " | Pallarés Díaz, Jesús";
+define('PREPARADO_CABECERA', " | Pallarés Díaz, Jesús");

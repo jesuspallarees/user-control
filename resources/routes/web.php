@@ -7,12 +7,13 @@ if (!isset($_SERVER['REQUEST_URI'])) {
     $peticion = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 }
 
-$estructura_carpetas = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
-
 $lista_blanca = [
-    '/' => 'login.php',
+    '/' => 'home.php',
+    '/login' => 'login.php',
+    '/signin' => 'signin.php'
 ];
 
+$estructura_carpetas = __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR;
 if (array_key_exists($peticion, $lista_blanca)) {
     require $estructura_carpetas . $lista_blanca[$peticion];
 } else {
