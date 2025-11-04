@@ -3,13 +3,13 @@ if (isset($_SESSION['usuario'])) {
     if ($_SESSION['rol'] == "admin") { ?>
         <nav>
             <ul>
-                <a href="/">
+                <a href="/" class="navegacion">
                     <li>Home</li>
                 </a>
-                <a href="/panel-control">
+                <a href="/panel-control" class="navegacion">
                     <li>Panel de control</li>
                 </a>
-                <a href="?logout=true">
+                <a href="?logout=true" class="navegacion">
                     <li>Cerrar sesión</li>
                 </a>
             </ul>
@@ -17,10 +17,10 @@ if (isset($_SESSION['usuario'])) {
     <?php } else if ($_SESSION['rol'] == "usuario") { ?>
         <nav>
             <ul>
-                <a href="/">
+                <a href="/" class="navegacion">
                     <li>Home</li>
                 </a>
-                <a href="?logout=true">
+                <a href="?logout=true" class="navegacion">
                     <li>Cerrar sesión</li>
                 </a>
             </ul>
@@ -28,10 +28,10 @@ if (isset($_SESSION['usuario'])) {
     <?php } else { ?>
         <nav>
             <ul>
-                <a href="/">
+                <a href="/" class="navegacion">
                     <li>Home</li>
                 </a>
-                <a href="?logout=true">
+                <a href="?logout=true" class="navegacion">
                     <li>Cerrar sesión</li>
                 </a>
             </ul>
