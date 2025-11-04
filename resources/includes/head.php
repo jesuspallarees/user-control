@@ -1,5 +1,7 @@
 <?php
-if (preg_match('/^\/.*$/', $_SERVER["REQUEST_URI"])) {
+if (preg_match('/^\/signin$/', $_SERVER["REQUEST_URI"])) {
+    $nombre_pagina = "Sign In";
+} else if (preg_match('/^\/.*$/', $_SERVER["REQUEST_URI"])) {
     $nombre_pagina = "Login";
 }
 ?>

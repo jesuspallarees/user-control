@@ -1,8 +1,8 @@
 <?php
 class Usuario{
-    protected string $usuario;
-    protected string $contrasenya; 
-    protected string $rol; 
+    public string $usuario;
+    public string $contrasenya; 
+    public string $rol; 
 
     function __construct(string $usuario, string $contrasenya, string $rol)
     {
