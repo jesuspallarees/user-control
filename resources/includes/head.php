@@ -1,8 +1,12 @@
 <?php
 if (preg_match('/^\/signin$/', $_SERVER["REQUEST_URI"])) {
     $nombre_pagina = "Sign In";
-} else if (preg_match('/^\/.*$/', $_SERVER["REQUEST_URI"])) {
+}else if (preg_match('/^\/panel-control$/', $_SERVER["REQUEST_URI"])) {
+    $nombre_pagina = "Panel de control";
+}else if (preg_match('/^\/login$/', $_SERVER["REQUEST_URI"])) {
     $nombre_pagina = "Login";
+}else if (preg_match('/^\/.*$/', $_SERVER["REQUEST_URI"])) {
+    $nombre_pagina = "Home";
 }
 ?>
 
