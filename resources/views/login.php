@@ -49,11 +49,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <form method="post">
                 <?php if (count($errores) != 0) echo "<p class='error'>Usuario y/o contraseña incorrectos</p>" ?>
                 <h2>Login</h2>
-                <label for="usuario">Usuario: </label>
+                <label for="usuario">Usuario/a: </label>
                 <input type="text" name="usuario" id="usuario">
                 <label for="contrasenya">Contraseña: </label>
                 <input type="text" name="contrasenya" id="contrasenya">
-                <a href="/signin">Nuevo usuario</a>
+                <a href="/signin">Nuevo usuario/a</a>
                 <input type="submit" value="Acceder">
             </form>
         </main>

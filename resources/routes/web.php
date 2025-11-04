@@ -1,5 +1,28 @@
 <?php
+
 declare(strict_types=1);
+
+if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
+    $_SESSION = array();
+
+    if (ini_get("session.use_cookies")) { // Si quiero eliminar la sesión, también romper las cookies!
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
+
+    session_destroy();
+
+    header("Location: /login");
+    exit();
+}
 
 if (!isset($_SERVER['REQUEST_URI'])) {
     $peticion = '/';

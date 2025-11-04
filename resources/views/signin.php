@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && count($errores) == 0) {
             <form method="post">
                 <?php if ($_SERVER["REQUEST_METHOD"] == "POST" && count($errores) == 0) echo "<p class='valido'>Se ha dado de alta el usuario de forma correcta</p>" ?>
                 <h2>Sign In</h2>
-                <label for="usuario">Usuario: </label>
+                <label for="usuario">Usuario/a: </label>
                 <?php if (isset($errores["error_usuario"])) echo "<p class='error'> " . $errores['error_usuario'] . "</p>" ?>
                 <input type="text" name="usuario" id="usuario">
                 <label for="contrasenya">Contraseña: </label>
@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && count($errores) == 0) {
                 <input type="text" name="rol" id="rol">
                 <a href="/login">Ya tengo usuario</a>
 
-                <input type="submit" value="Acceder">
+                <input type="submit" value="Crear usuario/a">
             </form>
         </main>
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'footer.php'; ?>

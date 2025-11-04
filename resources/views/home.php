@@ -1,8 +1,10 @@
-<?php session_start(); 
+<?php 
+session_start(); 
 if(!isset($_SESSION['usuario'])){
     header("Location:/login");
     exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -10,6 +12,8 @@ if(!isset($_SESSION['usuario'])){
 <body>
     <div class="contenedor">
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'header.php'; ?>
+        <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'navigation.php'; ?>
+
         <main>
             <?php
                 if(isset($_SESSION['usuario'])){
