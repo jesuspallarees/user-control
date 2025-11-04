@@ -22,6 +22,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (!$valido) {
                 $errores['error_contrasenya'] = "Contraseña incorrecta";
             } else {
+                session_start();
+                $_SESSION["usuario"] = $usuario_encontrado['usuario'];
+                $_SESSION["contrasenya"] = $usuario_encontrado['contrasenya'];
+                $_SESSION["rol"] = $usuario_encontrado['rol'];
                 header("Location:/");
                 exit();
             }
