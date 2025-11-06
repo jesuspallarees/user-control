@@ -40,9 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 escribir_json_multiples_usuarios(RUTA_USUARIOS, $lista_usuarios);
 
                 if (isset($_POST["modificar_usuario"])) {
-                    setcookie('color_encabezado_' . $usuario, $_POST["encabezado"], time() + 30*24*3600, "/");
-                    setcookie('color_fondo_' . $usuario, $_POST["fondo"], time() + 30*24*3600, "/");
-                    setcookie('color_pie_' . $usuario, $_POST["pie"], time() + 30*24*3600, "/");
+                    setcookie('color_encabezado_' . $usuario, $_POST["encabezado"], time() + 30 * 24 * 3600, "/");
+                    setcookie('color_fondo_' . $usuario, $_POST["fondo"], time() + 30 * 24 * 3600, "/");
+                    setcookie('color_pie_' . $usuario, $_POST["pie"], time() + 30 * 24 * 3600, "/");
 
                     $_COOKIE["color_encabezado"] = $_POST["encabezado"];
                     $_COOKIE["color_fondo"] = $_POST["fondo"];
@@ -60,15 +60,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="es">
 <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'head.php'; ?>
 <style>
-  header {
-    background-color: <?= $_COOKIE['color_encabezado_' . $_SESSION['usuario']] ?? 'lightcyan' ?>;
-  }
-  .contenedor {
-    background-color: <?= $_COOKIE['color_fondo_' . $_SESSION['usuario']] ?? 'lightslategrey' ?>;
-  }
-  footer {
-    background-color: <?= $_COOKIE['color_pie_' . $_SESSION['usuario']] ?? 'lightcyan' ?>;
-  }
+    header {
+        background-color: <?= $_COOKIE['color_encabezado_' . $_SESSION['usuario']] ?? 'lightseagreen' ?>;
+    }
+
+    .navegacion {
+        background-color: <?= $_COOKIE['color_encabezado_' . $_SESSION['usuario']] ?? 'lightseagreen' ?>;
+    }
+
+    .contenedor {
+        background-color: <?= $_COOKIE['color_fondo_' . $_SESSION['usuario']] ?? 'lightblue' ?>;
+    }
+
+    footer {
+        background-color: <?= $_COOKIE['color_pie_' . $_SESSION['usuario']] ?? 'lightseagreen' ?>;
+    }
+
+    input[type="submit"] {
+        background-color: <?= $_COOKIE['color_encabezado_' . $_SESSION['usuario']] ?? 'lightseagreen' ?>;
+    }
 </style>
 
 <body>

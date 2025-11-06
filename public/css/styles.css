@@ -1,19 +1,24 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap");
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .contenedor {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: lightblue;
 }
 
 header {
   position: sticky;
   top: 0;
   padding: 10px 16px;
+  background-color: lightseagreen;
 }
 
 ul {
@@ -28,7 +33,7 @@ ul {
 .navegacion{
   text-decoration: none;
   color: black;
-  background-color: lightgray;
+  background-color: lightseagreen;
   padding: 8px;
   border-radius: 8px;
 }
@@ -45,6 +50,7 @@ footer {
   text-align: center;
   padding: 15px;
   margin-top: 25px;
+  background-color: lightseagreen;
 }
 
 form {
@@ -52,6 +58,32 @@ form {
   flex-direction: column;
   max-width: 20rem;
   gap: 5px;
+  border-radius: 8px;
   background-color: #fff;
   padding: 25px;
+}
+
+input[type="submit"] {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: lightseagreen;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.error {
+  color: crimson;
+  background-color: lightcoral;
+  border-radius: 10px;
+  padding: 5px;
+  text-align: center;
+}
+
+.valido {
+  color: green;
+  background-color: lightgreen;
+  border-radius: 10px;
+  padding: 5px;
+  text-align: center;
 }
