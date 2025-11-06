@@ -1,7 +1,7 @@
 <?php
 session_start();
-// if(isset($_SESSION['usuario'])){ ** Por si las moscas, hace falta revisar bien antes de activar esto.
-//     if(isset($_SESSION['rol']) && $_SESSION['rol'] != "admin"){
+// if(isset($_SESSION['usuario'])){ ** Sólo por si las moscas, si encuentro algún error de entrada, ACTIVAR. 
+//     if(isset($_SESSION['rol']) || $_SESSION['rol'] != "admin"){
 //         header("Location:/login");
 //         exit();
 //     }
@@ -38,6 +38,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $lista_usuarios = array_values($lista_usuarios);
                 $lista_usuarios[] = (array) $usuario_modificado;
                 escribir_json_multiples_usuarios(RUTA_USUARIOS, $lista_usuarios);
+
+                if (isset($_POST["modificar_usuario"])) {
+                    setcookie('color_encabezado_' . $usuario, $_POST["encabezado"], time() + 30*24*3600, "/");
+                    setcookie('color_fondo_' . $usuario, $_POST["fondo"], time() + 30*24*3600, "/");
+                    setcookie('color_pie_' . $usuario, $_POST["pie"], time() + 30*24*3600, "/");
+
+                    $_COOKIE["color_encabezado"] = $_POST["encabezado"];
+                    $_COOKIE["color_fondo"] = $_POST["fondo"];
+                    $_COOKIE["color_pie"] = $_POST["pie"];
+                }
             } else {
                 $errores["error_usuario_no_encontrado"] = "No se ha encontrado ningún usuario con ese nombre";
             }
@@ -49,6 +59,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html lang="es">
 <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'head.php'; ?>
+<style>
+  header {
+    background-color: <?= $_COOKIE['color_encabezado_' . $_SESSION['usuario']] ?? 'lightcyan' ?>;
+  }
+  .contenedor {
+    background-color: <?= $_COOKIE['color_fondo_' . $_SESSION['usuario']] ?? 'lightslategrey' ?>;
+  }
+  footer {
+    background-color: <?= $_COOKIE['color_pie_' . $_SESSION['usuario']] ?? 'lightcyan' ?>;
+  }
+</style>
 
 <body>
     <div class="contenedor">
@@ -56,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'navigation.php'; ?>
         <main>
             <form method="post">
-                <?php if (count($errores) == 0) echo "<p class='valido'>Se ha modificado de forma correcta al usuario</p>" ?>
+                <?php if (isset($errores) && count($errores) == 0) echo "<p class='valido'>Se ha modificado de forma correcta al usuario. Los cambios se realizarán en la siguiente sesión.</p>" ?>
                 <label for="usuario">Nombre de usuario:</label>
                 <?php if (isset($errores["error_usuario_no_encontrado"])) echo "<p class='error'> " . $errores['error_usuario_no_encontrado'] . "</p>" ?>
                 <input type="text" name="usuario" id="usuario">
@@ -70,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="color" name="fondo" id="fondo">
                 <label for="pie">Color pie:</label>
                 <input type="color" name="pie" id="pie">
-                <input type="submit" value="Modificar usuario">
+                <input type="submit" name="modificar_usuario" value="Modificar usuario">
             </form>
         </main>
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'footer.php'; ?>
