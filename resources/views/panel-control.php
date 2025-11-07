@@ -1,16 +1,17 @@
 <?php
 session_start();
-
-if(!isset($_SESSION['usuario']) || !isset($_SESSION['rol']) || $_SESSION['rol'] != "admin"){
+if (!isset($_SESSION['usuario']) || !isset($_SESSION['rol']) || $_SESSION['rol'] != "admin") {
     header("Location: login.php");
     exit();
 }
 
-if (empty($_SESSION['csrf_token']) || empty($_SESSION['tiempo_csrf_token']) || 
-    (time() - $_SESSION['tiempo_csrf_token']) > VIDA_TOKEN_CSRF) {
-    
+if (
+    empty($_SESSION['csrf_token']) || empty($_SESSION['tiempo_csrf_token']) ||
+    (time() - $_SESSION['tiempo_csrf_token']) > VIDA_TOKEN_CSRF
+) {
+
     $_SESSION['csrf_token'] = generarTokenCSRF();
-    $_SESSION['tiempo_csrf_token'] = time(); 
+    $_SESSION['tiempo_csrf_token'] = time();
 }
 
 $errores = [];
@@ -20,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die('Solicitud no válida. Token CSRF no coincide.');
     }
-    
+
     if (isset($_POST["usuario"])) {
         $lista_usuarios = leer_json(RUTA_USUARIOS);
         $usuario = htmlspecialchars($_POST["usuario"]);
@@ -60,12 +61,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_COOKIE["color_fondo"] = $_POST["fondo"];
                     $_COOKIE["color_pie"] = $_POST["pie"];
                 }
-                
+
                 $_SESSION['csrf_token'] = generarTokenCSRF();
                 $_SESSION['tiempo_csrf_token'] = time();
                 $exito = true;
-                $_POST = array(); 
-                
+                $_POST = array();
+
+                header("Location:panel-control?exito=true");
+                exit();
             } else {
                 $errores["error_usuario_no_encontrado"] = "No se ha encontrado ningún usuario con ese nombre";
             }
@@ -103,18 +106,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'header.php'; ?>
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'navigation.php'; ?>
         <main>
-            <form method="post">
-                <input type="hidden" name="csrf_token" value="<?php 
-                if(isset($_SESSION['csrf_token'])) { 
-                    echo $_SESSION['csrf_token']; 
-                    }else{
-                        die("No se ha generado un token CSRF válido.");
-                    }?>">
-                
-                <?php if ($exito && count($errores) == 0){ ?>
-                    <p class='valido'>Se ha modificado de forma correcta al usuario. Los cambios se realizarán en la siguiente sesión.</p>
+            <form method="post" action="panel-control">
+                <input type="hidden" name="csrf_token" value="<?php
+                                                                if (isset($_SESSION['csrf_token'])) {
+                                                                    echo $_SESSION['csrf_token'];
+                                                                } else {
+                                                                    die("No se ha generado un token CSRF válido.");
+                                                                } ?>">
+
+                <?php if (isset($_GET['exito']) && count($errores) == 0) { ?>
+                    <p class='valido'>Se ha modificado de forma correcta al usuario.</p>
                 <?php } ?>
-                
+
                 <label for="usuario">Nombre de usuario:</label>
                 <?php if (isset($errores["error_usuario_no_encontrado"])) echo "<p class='error'> " . $errores['error_usuario_no_encontrado'] . "</p>" ?>
                 <input type="text" name="usuario" id="usuario" value="<?php echo (isset($errores) && count($errores) > 0 && isset($_POST['usuario'])) ? htmlspecialchars($_POST['usuario']) : ''; ?>">
@@ -134,4 +137,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'footer.php'; ?>
     </div>
 </body>
+
 </html>

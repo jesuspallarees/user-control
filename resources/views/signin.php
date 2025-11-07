@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && count($errores) == 0) {
     $contrasenya = password_hash($contrasenya, PASSWORD_DEFAULT);
     $usuario = new Usuario($usuario, $contrasenya, $rol);
     escribir_json_usuarios(RUTA_USUARIOS, $usuario);
-    header("Location:/login");
+    header("Location:/login?exito=true");
     exit();
 }
 ?>

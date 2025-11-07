@@ -55,7 +55,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'header.php'; ?>
         <main>
             <form method="post">
+                
                 <?php if (count($errores) != 0) echo "<p class='error'>Usuario y/o contraseña incorrectos</p>" ?>
+                <?php if (isset($_GET['exito'])) echo "<p class='valido'>Se ha dado de alta el usuario de forma correcta</p>"; ?>
+
                 <h2>Login</h2>
                 <label for="usuario">Usuario/a: </label>
                 <input type="text" name="usuario" id="usuario">
