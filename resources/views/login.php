@@ -23,6 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errores['error_contrasenya'] = "Contraseña incorrecta";
             } else {
                 session_start();
+                if (
+                    empty($_SESSION['csrf_token']) || empty($_SESSION['csrf_token_time']) ||
+                    (time() - $_SESSION['csrf_token_time']) > VIDA_TOKEN_CSRF
+                ) {
+
+                    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                    $_SESSION['csrf_token_time'] = time();
+                }
                 $_SESSION["usuario"] = $usuario_encontrado['usuario'];
                 $_SESSION["contrasenya"] = $usuario_encontrado['contrasenya'];
                 $_SESSION["rol"] = $usuario_encontrado['rol'];

@@ -14,6 +14,7 @@ if (empty($_SESSION['csrf_token']) || empty($_SESSION['tiempo_csrf_token']) ||
 }
 
 $errores = [];
+$exito = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -60,7 +61,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_COOKIE["color_pie"] = $_POST["pie"];
                 }
                 
-                $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // El concepto de token CSRF no me ha quedado muy claro, supongo que al realizar una operación con éxito, se regenera o incluso se elimina
+                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                $_SESSION['tiempo_csrf_token'] = time();
+                $exito = true;
+                $_POST = array(); 
                 
             } else {
                 $errores["error_usuario_no_encontrado"] = "No se ha encontrado ningún usuario con ese nombre";
@@ -101,20 +105,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <main>
             <form method="post">
                 <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                <?php if (isset($errores) && count($errores) == 0) echo "<p class='valido'>Se ha modificado de forma correcta al usuario. Los cambios se realizarán en la siguiente sesión.</p>" ?>
+                
+                <?php if ($exito && count($errores) == 0){ ?>
+                    <p class='valido'>Se ha modificado de forma correcta al usuario. Los cambios se realizarán en la siguiente sesión.</p>
+                <?php } ?>
+                
                 <label for="usuario">Nombre de usuario:</label>
                 <?php if (isset($errores["error_usuario_no_encontrado"])) echo "<p class='error'> " . $errores['error_usuario_no_encontrado'] . "</p>" ?>
-                <input type="text" name="usuario" id="usuario" value="<?php echo isset($_POST['usuario']) ? htmlspecialchars($_POST['usuario']) : ''; ?>">
+                <input type="text" name="usuario" id="usuario" value="<?php echo (isset($errores) && count($errores) > 0 && isset($_POST['usuario'])) ? htmlspecialchars($_POST['usuario']) : ''; ?>">
                 <label for="rol">Rol:</label>
                 <?php if (isset($errores["error_rol_vacio"])) echo "<p class='error'> " . $errores['error_rol_vacio'] . "</p>" ?>
                 <?php if (isset($errores["error_rol_invalido"])) echo "<p class='error'> " . $errores['error_rol_invalido'] . "</p>" ?>
-                <input type="text" name="rol" id="rol" value="<?php echo isset($_POST['rol']) ? htmlspecialchars($_POST['rol']) : ''; ?>">
+                <input type="text" name="rol" id="rol" value="<?php echo (isset($errores) && count($errores) > 0 && isset($_POST['rol'])) ? htmlspecialchars($_POST['rol']) : ''; ?>">
                 <label for="encabezado">Color encabezado:</label>
-                <input type="color" name="encabezado" id="encabezado" value="<?php echo isset($_POST['encabezado']) ? $_POST['encabezado'] : '#20B2AA'; ?>">
+                <input type="color" name="encabezado" id="encabezado" value="<?php echo $_COOKIE['color_encabezado_' . $_SESSION['usuario']] ?? '#20b2aa' ?>">
                 <label for="fondo">Color fondo:</label>
-                <input type="color" name="fondo" id="fondo" value="<?php echo isset($_POST['fondo']) ? $_POST['fondo'] : '#ADD8E6'; ?>">
+                <input type="color" name="fondo" id="fondo" value="<?php echo $_COOKIE['color_fondo_' . $_SESSION['usuario']] ?? '#add8e6' ?>">
                 <label for="pie">Color pie:</label>
-                <input type="color" name="pie" id="pie" value="<?php echo isset($_POST['pie']) ? $_POST['pie'] : '#20B2AA'; ?>">
+                <input type="color" name="pie" id="pie" value="<?php echo $_COOKIE['color_pie_' . $_SESSION['usuario']] ?? '#20b2aa' ?>">
                 <input type="submit" name="modificar_usuario" value="Modificar usuario">
             </form>
         </main>
