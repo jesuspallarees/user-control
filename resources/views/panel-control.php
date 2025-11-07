@@ -9,7 +9,7 @@ if(!isset($_SESSION['usuario']) || !isset($_SESSION['rol']) || $_SESSION['rol'] 
 if (empty($_SESSION['csrf_token']) || empty($_SESSION['tiempo_csrf_token']) || 
     (time() - $_SESSION['tiempo_csrf_token']) > VIDA_TOKEN_CSRF) {
     
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = generarTokenCSRF();
     $_SESSION['tiempo_csrf_token'] = time(); 
 }
 
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_COOKIE["color_pie"] = $_POST["pie"];
                 }
                 
-                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                $_SESSION['csrf_token'] = generarTokenCSRF();
                 $_SESSION['tiempo_csrf_token'] = time();
                 $exito = true;
                 $_POST = array(); 
@@ -104,7 +104,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'navigation.php'; ?>
         <main>
             <form method="post">
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                <input type="hidden" name="csrf_token" value="<?php 
+                if(isset($_SESSION['csrf_token'])) { 
+                    echo $_SESSION['csrf_token']; 
+                    }else{
+                        die("No se ha generado un token CSRF válido.");
+                    }?>">
                 
                 <?php if ($exito && count($errores) == 0){ ?>
                     <p class='valido'>Se ha modificado de forma correcta al usuario. Los cambios se realizarán en la siguiente sesión.</p>

@@ -20,3 +20,7 @@ function escribir_json_multiples_usuarios(string $ruta_json, array $lista_usuari
 {
     file_put_contents($ruta_json, json_encode($lista_usuarios, JSON_PRETTY_PRINT));
 }
+
+function generarTokenCSRF(): string{
+    return md5(uniqid(mt_rand(), true));
+}
