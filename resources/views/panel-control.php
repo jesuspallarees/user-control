@@ -1,19 +1,30 @@
 <?php
 session_start();
-// if(isset($_SESSION['usuario'])){ ** Sólo por si las moscas, si encuentro algún error de entrada, ACTIVAR. 
-//     if(isset($_SESSION['rol']) || $_SESSION['rol'] != "admin"){
-//         header("Location:/login");
-//         exit();
-//     }
-// }
+
+if(!isset($_SESSION['usuario']) || !isset($_SESSION['rol']) || $_SESSION['rol'] != "admin"){
+    header("Location: login.php");
+    exit();
+}
+
+if (empty($_SESSION['csrf_token']) || empty($_SESSION['tiempo_csrf_token']) || 
+    (time() - $_SESSION['tiempo_csrf_token']) > VIDA_TOKEN_CSRF) {
+    
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    $_SESSION['tiempo_csrf_token'] = time(); 
+}
+
+$errores = [];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $errores = [];
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die('Solicitud no válida. Token CSRF no coincide.');
+    }
+    
     if (isset($_POST["usuario"])) {
         $lista_usuarios = leer_json(RUTA_USUARIOS);
         $usuario = htmlspecialchars($_POST["usuario"]);
 
-        if (!isset($_POST["rol"])) {
+        if (empty($_POST["rol"])) {
             $errores["error_rol_vacio"] = "Introduzca un rol, por favor";
         } else {
             $rol = $_POST["rol"];
@@ -48,13 +59,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_COOKIE["color_fondo"] = $_POST["fondo"];
                     $_COOKIE["color_pie"] = $_POST["pie"];
                 }
+                
+                $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // El concepto de token CSRF no me ha quedado muy claro, supongo que al realizar una operación con éxito, se regenera o incluso se elimina
+                
             } else {
                 $errores["error_usuario_no_encontrado"] = "No se ha encontrado ningún usuario con ese nombre";
             }
         }
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -87,25 +100,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'navigation.php'; ?>
         <main>
             <form method="post">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <?php if (isset($errores) && count($errores) == 0) echo "<p class='valido'>Se ha modificado de forma correcta al usuario. Los cambios se realizarán en la siguiente sesión.</p>" ?>
                 <label for="usuario">Nombre de usuario:</label>
                 <?php if (isset($errores["error_usuario_no_encontrado"])) echo "<p class='error'> " . $errores['error_usuario_no_encontrado'] . "</p>" ?>
-                <input type="text" name="usuario" id="usuario">
+                <input type="text" name="usuario" id="usuario" value="<?php echo isset($_POST['usuario']) ? htmlspecialchars($_POST['usuario']) : ''; ?>">
                 <label for="rol">Rol:</label>
                 <?php if (isset($errores["error_rol_vacio"])) echo "<p class='error'> " . $errores['error_rol_vacio'] . "</p>" ?>
                 <?php if (isset($errores["error_rol_invalido"])) echo "<p class='error'> " . $errores['error_rol_invalido'] . "</p>" ?>
-                <input type="text" name="rol" id="rol">
+                <input type="text" name="rol" id="rol" value="<?php echo isset($_POST['rol']) ? htmlspecialchars($_POST['rol']) : ''; ?>">
                 <label for="encabezado">Color encabezado:</label>
-                <input type="color" name="encabezado" id="encabezado">
+                <input type="color" name="encabezado" id="encabezado" value="<?php echo isset($_POST['encabezado']) ? $_POST['encabezado'] : '#20B2AA'; ?>">
                 <label for="fondo">Color fondo:</label>
-                <input type="color" name="fondo" id="fondo">
+                <input type="color" name="fondo" id="fondo" value="<?php echo isset($_POST['fondo']) ? $_POST['fondo'] : '#ADD8E6'; ?>">
                 <label for="pie">Color pie:</label>
-                <input type="color" name="pie" id="pie">
+                <input type="color" name="pie" id="pie" value="<?php echo isset($_POST['pie']) ? $_POST['pie'] : '#20B2AA'; ?>">
                 <input type="submit" name="modificar_usuario" value="Modificar usuario">
             </form>
         </main>
         <?php require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'footer.php'; ?>
     </div>
 </body>
-
 </html>
