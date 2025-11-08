@@ -8,7 +8,7 @@ ini_set('display_errors', 1); // 0 para no mostrar ni un solo error
 if (isset($_GET['logout']) && $_GET['logout'] === 'true') {
     $_SESSION = array();
 
-    if (ini_get("session.use_cookies")) { // Si quiero eliminar la sesión, también romper las cookies!
+    if (ini_get("session.use_cookies")) { // Si quiero eliminar la sesión, también cargarme las cookies!
         $params = session_get_cookie_params();
         setcookie(
             session_name(),
