@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     (time() - $_SESSION['csrf_token_time']) > VIDA_TOKEN_CSRF
                 ) {
 
-                    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                    $_SESSION['csrf_token'] = generarTokenCSRF();
                     $_SESSION['csrf_token_time'] = time();
                 }
                 $_SESSION["usuario"] = $usuario_encontrado['usuario'];
